@@ -27,7 +27,7 @@ logger = setup_logging(__name__)
 @st.cache_resource
 def load_database() -> sqlite3.Connection:
     """Load SQLite database."""
-    return sqlite3.connect(str(settings.db_path))
+    return sqlite3.connect(str(settings.db_path), check_same_thread=False)
 
 
 @st.cache_data

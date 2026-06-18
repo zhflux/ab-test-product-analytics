@@ -191,6 +191,10 @@ def write_csv(df: pd.DataFrame, path: Path) -> None:
 def write_sqlite(df: pd.DataFrame, path: Path) -> None:
     with sqlite3.connect(path) as conn:
         df.to_sql("raw_ab_test_events", conn, if_exists="replace", index=False)
+        # Create alias view for dashboard compatibility
+        conn.execute("DROP VIEW IF EXISTS events")
+        conn.execute("CREATE VIEW events AS SELECT * FROM raw_ab_test_events")
+        conn.commit()
 
 
 def parse_args() -> argparse.Namespace:
