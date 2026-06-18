@@ -24,11 +24,12 @@ jobs:
       - name: Generate test data for validation
         run: python pipeline/ingest.py --seed 2026 --num-users 500
       - name: Run data quality checks
-        run: python -c "
+        run: |
+          python << 'EOF'
           import pandas as pd
           from pipeline.data_validation import run_data_quality_checks, print_validation_report
           df = pd.read_csv('data/raw_ab_test_events.csv')
           results = run_data_quality_checks(df)
           print_validation_report(results)
           assert results['events_validation']['is_valid'], 'Data validation failed'
-        "
+          EOF
